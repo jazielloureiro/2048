@@ -1,11 +1,19 @@
-if filewritable(expand('%'))
-	write
-endif
+function! s:main()
+	call s:createBuffer()
 
-edit! 2048
+	call setline(1, 'Hello World!')
+	redraw
+	call getchar()
 
-call setline(1, 'Hello World!')
-redraw
-call getchar()
+	bdelete!
+endfunction
 
-bdelete!
+function! s:createBuffer()
+	if filewritable(expand('%'))
+		write
+	endif
+
+	edit! 2048
+endfunction
+
+call s:main()
