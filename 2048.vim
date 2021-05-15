@@ -1,6 +1,10 @@
-edit 2048
+if filewritable(expand('%'))
+	write
+endif
 
-call setline(1, "Hello World!")
+edit! 2048
+
+call setline(1, 'Hello World!')
 redraw
 call getchar()
 
