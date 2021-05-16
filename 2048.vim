@@ -32,7 +32,28 @@ function! s:createBoard()
 		let l:board[l:i] = copy(l:cols)
 	endfor
 
+	call s:addNumberToBoard(l:board, 16)
+	call s:addNumberToBoard(l:board, 15)
+
 	return l:board
+endfunction
+
+function! s:addNumberToBoard(board, available_squares)
+	let l:position = rand() % a:available_squares + 1
+	let l:pos_count = 0
+
+	for l:i in range(4)
+		for l:j in range(4)
+			if a:board[l:i][l:j] == 0
+				let l:pos_count += 1
+
+				if l:pos_count == l:position
+					let a:board[l:i][l:j] = rand() % 10 == 0? 4 : 2
+					return
+				endif
+			endif
+		endfor
+	endfor
 endfunction
 
 function! s:drawBoardStructure()
