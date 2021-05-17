@@ -4,8 +4,18 @@ function! s:main()
 	let l:board = s:createBoard()
 
 	call s:drawBoardStructure()
-	call s:drawBoard(l:board)
-	call getchar()
+
+	let l:input = "h"
+	let l:available_squares = 14
+	while l:input != "q"
+		call s:drawBoard(l:board)
+
+		let l:input = nr2char(getchar())
+		echo l:input
+
+		call s:addNumberToBoard(l:board, l:available_squares)
+		let l:available_squares -= 1
+	endwhile
 
 	bdelete!
 endfunction
