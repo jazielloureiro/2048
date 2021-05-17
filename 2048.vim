@@ -13,6 +13,13 @@ function! s:main()
 		let l:input = nr2char(getchar())
 		echo l:input
 
+		if l:input == "h"
+			call s:moveLeft(l:board)
+		elseif l:input == "j"
+		elseif l:input == "k"
+		elseif l:input == "l"
+		endif
+
 		call s:addNumberToBoard(l:board, l:available_squares)
 		let l:available_squares -= 1
 	endwhile
@@ -94,6 +101,41 @@ function! s:drawBoard(board)
 	endfor
 
 	redraw
+endfunction
+
+function! s:moveLeft(board)
+	for l:i in range(4)
+		for l:j in range(3)
+			if a:board[l:i][l:j] != 0
+				for l:k in range(l:j + 1, 3)
+					if a:board[l:i][l:j] == a:board[l:i][l:k]
+						let a:board[l:i][l:j] *= 2
+						let a:board[l:i][l:k] = 0
+						break
+					elseif a:board[l:i][l:k] != 0
+						break
+					endif
+				endfor
+			endif
+		endfor
+	endfor
+
+	for l:i in range(4)
+		for l:j in range(1, 3)
+			if a:board[l:i][l:j] != 0
+				while l:j > 0
+					if a:board[l:i][l:j - 1] == 0
+						let l:aux = a:board[l:i][l:j]
+						let a:board[l:i][l:j] = a:board[l:i][l:j - 1]
+						let a:board[l:i][l:j - 1] = l:aux
+						let l:j -= 1
+					else
+						break
+					endif
+				endwhile
+			endif
+		endfor
+	endfor
 endfunction
 
 call s:main()
