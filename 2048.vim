@@ -18,6 +18,7 @@ function! s:main()
 		elseif l:input == "j"
 		elseif l:input == "k"
 		elseif l:input == "l"
+			call s:moveRight(l:board)
 		endif
 
 		call s:addNumberToBoard(l:board, l:available_squares)
@@ -129,6 +130,41 @@ function! s:moveLeft(board)
 						let a:board[l:i][l:j] = a:board[l:i][l:j - 1]
 						let a:board[l:i][l:j - 1] = l:aux
 						let l:j -= 1
+					else
+						break
+					endif
+				endwhile
+			endif
+		endfor
+	endfor
+endfunction
+
+function! s:moveRight(board)
+	for l:i in range(4)
+		for l:j in range(3, 1, -1)
+			if a:board[l:i][l:j] != 0
+				for l:k in range(l:j - 1, 0, -1)
+					if a:board[l:i][l:j] == a:board[l:i][l:k]
+						let a:board[l:i][l:j] *= 2
+						let a:board[l:i][l:k] = 0
+						break
+					elseif a:board[l:i][l:k] != 0
+						break
+					endif
+				endfor
+			endif
+		endfor
+	endfor
+
+	for l:i in range(4)
+		for l:j in range(2, 0, -1)
+			if a:board[l:i][l:j] != 0
+				while l:j < 3
+					if a:board[l:i][l:j + 1] == 0
+						let l:aux = a:board[l:i][l:j]
+						let a:board[l:i][l:j] = a:board[l:i][l:j + 1]
+						let a:board[l:i][l:j + 1] = l:aux
+						let l:j += 1
 					else
 						break
 					endif
