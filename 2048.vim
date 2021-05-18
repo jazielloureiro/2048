@@ -16,6 +16,7 @@ function! s:main()
 		if l:input == "h"
 			call s:moveLeft(l:board)
 		elseif l:input == "j"
+			call s:moveDown(l:board)
 		elseif l:input == "k"
 		elseif l:input == "l"
 			call s:moveRight(l:board)
@@ -130,6 +131,41 @@ function! s:moveLeft(board)
 						let a:board[l:i][l:j] = a:board[l:i][l:j - 1]
 						let a:board[l:i][l:j - 1] = l:aux
 						let l:j -= 1
+					else
+						break
+					endif
+				endwhile
+			endif
+		endfor
+	endfor
+endfunction
+
+function! s:moveDown(board)
+	for l:i in range(4)
+		for l:j in range(3, 1, -1)
+			if a:board[l:j][l:i] != 0
+				for l:k in range(l:j - 1, 0, -1)
+					if a:board[l:j][l:i] == a:board[l:k][l:i]
+						let a:board[l:j][l:i] *= 2
+						let a:board[l:k][l:i] = 0
+						break
+					elseif a:board[l:k][l:i] != 0
+						break
+					endif
+				endfor
+			endif
+		endfor
+	endfor
+
+	for l:i in range(4)
+		for l:j in range(2, 0, -1)
+			if a:board[l:j][l:i] != 0
+				while l:j < 3
+					if a:board[l:j + 1][l:i] == 0
+						let l:aux = a:board[l:j][l:i]
+						let a:board[l:j][l:i] = a:board[l:j + 1][l:i]
+						let a:board[l:j + 1][l:i] = l:aux
+						let l:j += 1
 					else
 						break
 					endif
