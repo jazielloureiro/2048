@@ -3,28 +3,29 @@ function! s:main()
 
 	let l:board = s:createBoard()
 
+	let l:game = {
+		\ "available_squares": 14,
+		\ "input": ""}
+
 	call s:drawBoardStructure()
 
-	let l:input = "h"
-	let l:available_squares = 14
-	while l:input != "q"
+	while l:game.input != "q"
 		call s:drawBoard(l:board)
 
-		let l:input = nr2char(getchar())
-		echo l:input
+		let l:game.input = nr2char(getchar())
 
-		if l:input == "h"
+		if l:game.input == "h"
 			call s:moveLeft(l:board)
-		elseif l:input == "j"
+		elseif l:game.input == "j"
 			call s:moveDown(l:board)
-		elseif l:input == "k"
+		elseif l:game.input == "k"
 			call s:moveUp(l:board)
-		elseif l:input == "l"
+		elseif l:game.input == "l"
 			call s:moveRight(l:board)
 		endif
 
-		call s:addNumberToBoard(l:board, l:available_squares)
-		let l:available_squares -= 1
+		call s:addNumberToBoard(l:board, l:game.available_squares)
+		let l:game.available_squares -= 1
 	endwhile
 
 	bdelete!
