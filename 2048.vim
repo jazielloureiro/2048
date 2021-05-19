@@ -10,7 +10,7 @@ function! s:main()
 
 	call s:drawBoardStructure()
 
-	while l:game.input != "q"
+	while l:game.input != "q" && l:game.available_squares > 0 && !s:is2048Reached(l:board)
 		call s:drawBoard(l:board)
 
 		let l:game.input = nr2char(getchar())
@@ -109,6 +109,18 @@ function! s:drawBoard(board)
 	endfor
 
 	redraw
+endfunction
+
+function! s:is2048Reached(board)
+	for l:i in a:board
+		for l:j in l:i
+			if l:j == 2048
+				return 1
+			endif
+		endfor
+	endfor
+
+	return 0
 endfunction
 
 function! s:moveLeft(board, game)
