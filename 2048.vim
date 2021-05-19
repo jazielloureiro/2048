@@ -15,13 +15,13 @@ function! s:main()
 		let l:game.input = nr2char(getchar())
 
 		if l:game.input == "h"
-			call s:moveLeft(l:board)
+			call s:moveLeft(l:board, l:game)
 		elseif l:game.input == "j"
-			call s:moveDown(l:board)
+			call s:moveDown(l:board, l:game)
 		elseif l:game.input == "k"
-			call s:moveUp(l:board)
+			call s:moveUp(l:board, l:game)
 		elseif l:game.input == "l"
-			call s:moveRight(l:board)
+			call s:moveRight(l:board, l:game)
 		endif
 
 		call s:addNumberToBoard(l:board, l:game.available_squares)
@@ -107,7 +107,7 @@ function! s:drawBoard(board)
 	redraw
 endfunction
 
-function! s:moveLeft(board)
+function! s:moveLeft(board, game)
 	for l:i in range(4)
 		for l:j in range(3)
 			if a:board[l:i][l:j] != 0
@@ -115,6 +115,7 @@ function! s:moveLeft(board)
 					if a:board[l:i][l:j] == a:board[l:i][l:k]
 						let a:board[l:i][l:j] *= 2
 						let a:board[l:i][l:k] = 0
+						let a:game.available_squares += 1
 						break
 					elseif a:board[l:i][l:k] != 0
 						break
@@ -142,7 +143,7 @@ function! s:moveLeft(board)
 	endfor
 endfunction
 
-function! s:moveDown(board)
+function! s:moveDown(board, game)
 	for l:i in range(4)
 		for l:j in range(3, 1, -1)
 			if a:board[l:j][l:i] != 0
@@ -150,6 +151,7 @@ function! s:moveDown(board)
 					if a:board[l:j][l:i] == a:board[l:k][l:i]
 						let a:board[l:j][l:i] *= 2
 						let a:board[l:k][l:i] = 0
+						let a:game.available_squares += 1
 						break
 					elseif a:board[l:k][l:i] != 0
 						break
@@ -177,7 +179,7 @@ function! s:moveDown(board)
 	endfor
 endfunction
 
-function! s:moveUp(board)
+function! s:moveUp(board, game)
 	for l:i in range(4)
 		for l:j in range(3)
 			if a:board[l:j][l:i] != 0
@@ -185,6 +187,7 @@ function! s:moveUp(board)
 					if a:board[l:j][l:i] == a:board[l:k][l:i]
 						let a:board[l:j][l:i] *= 2
 						let a:board[l:k][l:i] = 0
+						let a:game.available_squares += 1
 						break
 					elseif a:board[l:k][l:i] != 0
 						break
@@ -212,7 +215,7 @@ function! s:moveUp(board)
 	endfor
 endfunction
 
-function! s:moveRight(board)
+function! s:moveRight(board, game)
 	for l:i in range(4)
 		for l:j in range(3, 1, -1)
 			if a:board[l:i][l:j] != 0
@@ -220,6 +223,7 @@ function! s:moveRight(board)
 					if a:board[l:i][l:j] == a:board[l:i][l:k]
 						let a:board[l:i][l:j] *= 2
 						let a:board[l:i][l:k] = 0
+						let a:game.available_squares += 1
 						break
 					elseif a:board[l:i][l:k] != 0
 						break
