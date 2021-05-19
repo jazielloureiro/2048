@@ -5,6 +5,7 @@ function! s:main()
 
 	let l:game = {
 		\ "available_squares": 14,
+		\ "is_move": 0,
 		\ "input": ""}
 
 	call s:drawBoardStructure()
@@ -24,8 +25,11 @@ function! s:main()
 			call s:moveRight(l:board, l:game)
 		endif
 
-		call s:addNumberToBoard(l:board, l:game.available_squares)
-		let l:game.available_squares -= 1
+		if l:game.is_move
+			call s:addNumberToBoard(l:board, l:game.available_squares)
+			let l:game.available_squares -= 1
+			let l:game.is_move = 0
+		endif
 	endwhile
 
 	bdelete!
@@ -116,6 +120,7 @@ function! s:moveLeft(board, game)
 						let a:board[l:i][l:j] *= 2
 						let a:board[l:i][l:k] = 0
 						let a:game.available_squares += 1
+						let a:game.is_move = 1
 						break
 					elseif a:board[l:i][l:k] != 0
 						break
@@ -134,6 +139,7 @@ function! s:moveLeft(board, game)
 						let a:board[l:i][l:j] = a:board[l:i][l:j - 1]
 						let a:board[l:i][l:j - 1] = l:aux
 						let l:j -= 1
+						let a:game.is_move = 1
 					else
 						break
 					endif
@@ -152,6 +158,7 @@ function! s:moveDown(board, game)
 						let a:board[l:j][l:i] *= 2
 						let a:board[l:k][l:i] = 0
 						let a:game.available_squares += 1
+						let a:game.is_move = 1
 						break
 					elseif a:board[l:k][l:i] != 0
 						break
@@ -170,6 +177,7 @@ function! s:moveDown(board, game)
 						let a:board[l:j][l:i] = a:board[l:j + 1][l:i]
 						let a:board[l:j + 1][l:i] = l:aux
 						let l:j += 1
+						let a:game.is_move = 1
 					else
 						break
 					endif
@@ -188,6 +196,7 @@ function! s:moveUp(board, game)
 						let a:board[l:j][l:i] *= 2
 						let a:board[l:k][l:i] = 0
 						let a:game.available_squares += 1
+						let a:game.is_move = 1
 						break
 					elseif a:board[l:k][l:i] != 0
 						break
@@ -206,6 +215,7 @@ function! s:moveUp(board, game)
 						let a:board[l:j][l:i] = a:board[l:j - 1][l:i]
 						let a:board[l:j - 1][l:i] = l:aux
 						let l:j -= 1
+						let a:game.is_move = 1
 					else
 						break
 					endif
@@ -224,6 +234,7 @@ function! s:moveRight(board, game)
 						let a:board[l:i][l:j] *= 2
 						let a:board[l:i][l:k] = 0
 						let a:game.available_squares += 1
+						let a:game.is_move = 1
 						break
 					elseif a:board[l:i][l:k] != 0
 						break
@@ -242,6 +253,7 @@ function! s:moveRight(board, game)
 						let a:board[l:i][l:j] = a:board[l:i][l:j + 1]
 						let a:board[l:i][l:j + 1] = l:aux
 						let l:j += 1
+						let a:game.is_move = 1
 					else
 						break
 					endif
