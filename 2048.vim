@@ -16,12 +16,40 @@ function! s:main()
 		let l:game.input = nr2char(getchar())
 
 		if l:game.input == "h"
+			call s:mergeNumbers(l:board, l:game, {
+				\ "range_rows": range(4),
+				\ "range_cols": range(3),
+				\ "increment": 1,
+				\ "limit": 3
+				\ })
+
 			call s:moveLeft(l:board, l:game)
 		elseif l:game.input == "j"
+			call s:mergeNumbers(l:board, l:game, {
+				\ "range_rows": range(3, 1, -1),
+				\ "range_cols": range(4),
+				\ "increment": -1,
+				\ "limit": 0
+				\ })
+
 			call s:moveDown(l:board, l:game)
 		elseif l:game.input == "k"
+			call s:mergeNumbers(l:board, l:game, {
+				\ "range_rows": range(3),
+				\ "range_cols": range(4),
+				\ "increment": 1,
+				\ "limit": 3
+				\ })
+
 			call s:moveUp(l:board, l:game)
 		elseif l:game.input == "l"
+			call s:mergeNumbers(l:board, l:game, {
+				\ "range_rows": range(4),
+				\ "range_cols": range(3, 1, -1),
+				\ "increment": -1,
+				\ "limit": 0
+				\ })
+
 			call s:moveRight(l:board, l:game)
 		endif
 
@@ -123,11 +151,11 @@ function! s:is2048Reached(board)
 	return 0
 endfunction
 
-function! s:moveLeft(board, game)
-	for l:i in range(4)
-		for l:j in range(3)
-			if a:board[l:i][l:j] != 0
-				for l:k in range(l:j + 1, 3)
+function! s:mergeNumbers(board, game, op)
+	for l:i in a:op.range_rows
+		for l:j in a:op.range_cols
+			if a:board[l:i][l:j] != 0 && a:game.input =~ 'h\|l'
+				for l:k in range(l:j + a:op.increment, a:op.limit, a:op.increment)
 					if a:board[l:i][l:j] == a:board[l:i][l:k]
 						let a:board[l:i][l:j] *= 2
 						let a:board[l:i][l:k] = 0
@@ -138,10 +166,24 @@ function! s:moveLeft(board, game)
 						break
 					endif
 				endfor
+			elseif a:board[l:i][l:j] != 0
+				for l:k in range(l:i + a:op.increment, a:op.limit, a:op.increment)
+					if a:board[l:i][l:j] == a:board[l:k][l:j]
+						let a:board[l:i][l:j] *= 2
+						let a:board[l:k][l:j] = 0
+						let a:game.available_squares += 1
+						let a:game.is_move = 1
+						break
+					elseif a:board[l:k][l:j] != 0
+						break
+					endif
+				endfor
 			endif
 		endfor
 	endfor
+endfunction
 
+function! s:moveLeft(board, game)
 	for l:i in range(4)
 		for l:j in range(1, 3)
 			if a:board[l:i][l:j] != 0
@@ -162,24 +204,6 @@ function! s:moveLeft(board, game)
 endfunction
 
 function! s:moveDown(board, game)
-	for l:i in range(3, 1, -1)
-		for l:j in range(4)
-			if a:board[l:i][l:j] != 0
-				for l:k in range(l:i - 1, 0, -1)
-					if a:board[l:i][l:j] == a:board[l:k][l:j]
-						let a:board[l:i][l:j] *= 2
-						let a:board[l:k][l:j] = 0
-						let a:game.available_squares += 1
-						let a:game.is_move = 1
-						break
-					elseif a:board[l:k][l:j] != 0
-						break
-					endif
-				endfor
-			endif
-		endfor
-	endfor
-
 	for l:i in range(4)
 		for l:j in range(2, 0, -1)
 			if a:board[l:j][l:i] != 0
@@ -200,24 +224,6 @@ function! s:moveDown(board, game)
 endfunction
 
 function! s:moveUp(board, game)
-	for l:i in range(3)
-		for l:j in range(4)
-			if a:board[l:i][l:j] != 0
-				for l:k in range(l:i + 1, 3)
-					if a:board[l:i][l:j] == a:board[l:k][l:j]
-						let a:board[l:i][l:j] *= 2
-						let a:board[l:k][l:j] = 0
-						let a:game.available_squares += 1
-						let a:game.is_move = 1
-						break
-					elseif a:board[l:k][l:j] != 0
-						break
-					endif
-				endfor
-			endif
-		endfor
-	endfor
-
 	for l:i in range(4)
 		for l:j in range(1, 3)
 			if a:board[l:j][l:i] != 0
@@ -238,24 +244,6 @@ function! s:moveUp(board, game)
 endfunction
 
 function! s:moveRight(board, game)
-	for l:i in range(4)
-		for l:j in range(3, 1, -1)
-			if a:board[l:i][l:j] != 0
-				for l:k in range(l:j - 1, 0, -1)
-					if a:board[l:i][l:j] == a:board[l:i][l:k]
-						let a:board[l:i][l:j] *= 2
-						let a:board[l:i][l:k] = 0
-						let a:game.available_squares += 1
-						let a:game.is_move = 1
-						break
-					elseif a:board[l:i][l:k] != 0
-						break
-					endif
-				endfor
-			endif
-		endfor
-	endfor
-
 	for l:i in range(4)
 		for l:j in range(2, 0, -1)
 			if a:board[l:i][l:j] != 0
