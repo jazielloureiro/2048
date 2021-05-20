@@ -4,9 +4,12 @@ function! s:main()
 	let l:board = s:createBoard()
 
 	let l:game = {
+		\ "rows": 4,
+		\ "cols": 4,
 		\ "available_squares": 14,
 		\ "is_move": 0,
-		\ "input": ""}
+		\ "input": ""
+		\}
 
 	call s:drawBoardStructure()
 
