@@ -187,57 +187,54 @@ function! s:moveLeft(board, game)
 	for l:i in range(4)
 		for l:j in range(1, 3)
 			if a:board[l:i][l:j] != 0
-				while l:j > 0
-					if a:board[l:i][l:j - 1] == 0
-						let l:aux = a:board[l:i][l:j]
-						let a:board[l:i][l:j] = a:board[l:i][l:j - 1]
-						let a:board[l:i][l:j - 1] = l:aux
-						let l:j -= 1
+				for l:k in range(l:j, 1, -1)
+					if a:board[l:i][l:k - 1] == 0
+						let l:aux = a:board[l:i][l:k]
+						let a:board[l:i][l:k] = a:board[l:i][l:k - 1]
+						let a:board[l:i][l:k - 1] = l:aux
 						let a:game.is_move = 1
 					else
 						break
 					endif
-				endwhile
+				endfor
 			endif
 		endfor
 	endfor
 endfunction
 
 function! s:moveDown(board, game)
-	for l:i in range(4)
-		for l:j in range(2, 0, -1)
-			if a:board[l:j][l:i] != 0
-				while l:j < 3
-					if a:board[l:j + 1][l:i] == 0
-						let l:aux = a:board[l:j][l:i]
-						let a:board[l:j][l:i] = a:board[l:j + 1][l:i]
-						let a:board[l:j + 1][l:i] = l:aux
-						let l:j += 1
+	for l:i in range(2, 0, -1)
+		for l:j in range(4)
+			if a:board[l:i][l:j] != 0
+				for l:k in range(l:i, 2)
+					if a:board[l:k + 1][l:j] == 0
+						let l:aux = a:board[l:k][l:j]
+						let a:board[l:k][l:j] = a:board[l:k + 1][l:j]
+						let a:board[l:k + 1][l:j] = l:aux
 						let a:game.is_move = 1
 					else
 						break
 					endif
-				endwhile
+				endfor
 			endif
 		endfor
 	endfor
 endfunction
 
 function! s:moveUp(board, game)
-	for l:i in range(4)
-		for l:j in range(1, 3)
-			if a:board[l:j][l:i] != 0
-				while l:j > 0
-					if a:board[l:j - 1][l:i] == 0
-						let l:aux = a:board[l:j][l:i]
-						let a:board[l:j][l:i] = a:board[l:j - 1][l:i]
-						let a:board[l:j - 1][l:i] = l:aux
-						let l:j -= 1
+	for l:i in range(1, 3)
+		for l:j in range(4)
+			if a:board[l:i][l:j] != 0
+				for l:k in range(l:i, 1, -1)
+					if a:board[l:k - 1][l:j] == 0
+						let l:aux = a:board[l:k][l:j]
+						let a:board[l:k][l:j] = a:board[l:k - 1][l:j]
+						let a:board[l:k - 1][l:j] = l:aux
 						let a:game.is_move = 1
 					else
 						break
 					endif
-				endwhile
+				endfor
 			endif
 		endfor
 	endfor
@@ -247,17 +244,16 @@ function! s:moveRight(board, game)
 	for l:i in range(4)
 		for l:j in range(2, 0, -1)
 			if a:board[l:i][l:j] != 0
-				while l:j < 3
-					if a:board[l:i][l:j + 1] == 0
-						let l:aux = a:board[l:i][l:j]
-						let a:board[l:i][l:j] = a:board[l:i][l:j + 1]
-						let a:board[l:i][l:j + 1] = l:aux
-						let l:j += 1
+				for l:k in range(l:j, 2)
+					if a:board[l:i][l:k + 1] == 0
+						let l:aux = a:board[l:i][l:k]
+						let a:board[l:i][l:k] = a:board[l:i][l:k + 1]
+						let a:board[l:i][l:k + 1] = l:aux
 						let a:game.is_move = 1
 					else
 						break
 					endif
-				endwhile
+				endfor
 			endif
 		endfor
 	endfor
