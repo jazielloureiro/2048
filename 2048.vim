@@ -167,18 +167,21 @@ function! s:drawLine(line)
 endfunction
 
 function! s:drawBoard(board)
-	for [l:i, l:j] in [[0, 2], [1, 4], [2, 6], [3, 8]]
+	let l:line_id = 2
+
+	for l:i in a:board
 		let l:line = "║ "
 
-		for l:k in range(4)
-			if a:board[l:i][l:k] != 0
-				let l:line .= printf("%4d", a:board[l:i][l:k]) . " ║ "
+		for l:j in l:i
+			if l:j != 0
+				let l:line .= printf("%4d", l:j) . " ║ "
 			else
-				let l:line .= "    " . " ║ "
+				let l:line .= "     ║ "
 			endif
 		endfor
 
-		call setline(l:j, l:line)
+		call setline(l:line_id, l:line)
+		let l:line_id += 2
 	endfor
 
 	redraw
