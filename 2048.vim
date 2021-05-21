@@ -12,59 +12,59 @@ function! s:main()
 
 		if l:game.input == "h"
 			call s:mergeNumbers(l:game, {
-				\ "range_rows": range(4),
-				\ "range_cols": range(3),
+				\ "range_rows": range(l:game.rows),
+				\ "range_cols": range(l:game.cols - 1),
 				\ "increment": 1,
-				\ "limit": 3
+				\ "limit": l:game.cols - 1
 				\ })
 
 			call s:move(l:game, {
-				\ "range_rows": range(4),
-				\ "range_cols": range(1, 3),
+				\ "range_rows": range(l:game.rows),
+				\ "range_cols": range(1, l:game.cols - 1),
 				\ "increment": -1,
 				\ "limit": 1
 				\ })
 		elseif l:game.input == "j"
 			call s:mergeNumbers(l:game, {
-				\ "range_rows": range(3, 1, -1),
-				\ "range_cols": range(4),
+				\ "range_rows": range(l:game.rows - 1, 1, -1),
+				\ "range_cols": range(l:game.cols),
 				\ "increment": -1,
 				\ "limit": 0
 				\ })
 
 			call s:move(l:game, {
-				\ "range_rows": range(2, 0, -1),
-				\ "range_cols": range(4),
+				\ "range_rows": range(l:game.rows - 2, 0, -1),
+				\ "range_cols": range(l:game.cols),
 				\ "increment": 1,
-				\ "limit": 2
+				\ "limit": l:game.rows - 2
 				\ })
 		elseif l:game.input == "k"
 			call s:mergeNumbers(l:game, {
-				\ "range_rows": range(3),
-				\ "range_cols": range(4),
+				\ "range_rows": range(l:game.rows - 1),
+				\ "range_cols": range(l:game.cols),
 				\ "increment": 1,
-				\ "limit": 3
+				\ "limit": l:game.rows - 1
 				\ })
 
 			call s:move(l:game, {
-				\ "range_rows": range(1, 3),
-				\ "range_cols": range(4),
+				\ "range_rows": range(1, l:game.rows - 1),
+				\ "range_cols": range(l:game.cols),
 				\ "increment": -1,
 				\ "limit": 1
 				\ })
 		elseif l:game.input == "l"
 			call s:mergeNumbers(l:game, {
-				\ "range_rows": range(4),
-				\ "range_cols": range(3, 1, -1),
+				\ "range_rows": range(l:game.rows),
+				\ "range_cols": range(l:game.cols - 1, 1, -1),
 				\ "increment": -1,
 				\ "limit": 0
 				\ })
 
 			call s:move(l:game, {
-				\ "range_rows": range(4),
-				\ "range_cols": range(2, 0, -1),
+				\ "range_rows": range(l:game.rows),
+				\ "range_cols": range(l:game.cols - 2, 0, -1),
 				\ "increment": 1,
-				\ "limit": 2
+				\ "limit": l:game.cols - 2
 				\ })
 		endif
 
@@ -86,7 +86,7 @@ function! s:createBuffer()
 endfunction
 
 function! s:createGameDict()
-	let l:game = #{rows: 4, cols: 4, is_move: 0, input: ""}
+	let l:game = #{rows: 3, cols: 3, is_move: 0, input: ""}
 
 	let l:game.board = s:createBoard(l:game.rows, l:game.cols)
 
