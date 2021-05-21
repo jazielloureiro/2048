@@ -69,8 +69,7 @@ function! s:main()
 		endif
 
 		if l:game.is_move
-			call s:addNumberToBoard(l:game.board, l:game.available_squares)
-			let l:game.available_squares -= 1
+			call s:addNumberToBoard(l:game)
 			let l:game.is_move = 0
 		endif
 	endwhile
@@ -87,18 +86,14 @@ function! s:createBuffer()
 endfunction
 
 function! s:createGameDict()
-	let l:game = {
-		\ "rows": 4,
-		\ "cols": 4,
-		\ "available_squares": 14,
-		\ "is_move": 0,
-		\ "input": ""
-		\}
+	let l:game = #{rows: 4, cols: 4, is_move: 0, input: ""}
 
 	let l:game.board = s:createBoard(l:game.rows, l:game.cols)
 
-	call s:addNumberToBoard(l:game.board, 16)
-	call s:addNumberToBoard(l:game.board, 15)
+	let l:game.available_squares = l:game.rows * l:game.cols
+
+	call s:addNumberToBoard(l:game)
+	call s:addNumberToBoard(l:game)
 
 	return l:game
 endfunction
@@ -118,17 +113,18 @@ function! s:createBoard(rows, cols)
 	return l:board
 endfunction
 
-function! s:addNumberToBoard(board, available_squares)
-	let l:position = rand() % a:available_squares + 1
+function! s:addNumberToBoard(game)
+	let l:position = rand() % a:game.available_squares + 1
 	let l:pos_count = 0
 
-	for l:i in range(4)
-		for l:j in range(4)
-			if a:board[l:i][l:j] == 0
+	for l:i in range(a:game.rows)
+		for l:j in range(a:game.cols)
+			if a:game.board[l:i][l:j] == 0
 				let l:pos_count += 1
 
 				if l:pos_count == l:position
-					let a:board[l:i][l:j] = rand() % 10 == 0? 4 : 2
+					let a:game.board[l:i][l:j] = rand() % 10 == 0? 4 : 2
+					let a:game.available_squares -= 1
 					return
 				endif
 			endif
