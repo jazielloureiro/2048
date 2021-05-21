@@ -3,7 +3,7 @@ function! s:main()
 
 	let l:game = s:createGameDict()
 
-	call s:drawBoardStructure()
+	call s:drawBoardStructure(l:game.rows, l:game.cols)
 
 	while l:game.input != "q" && l:game.available_squares > 0 && !s:is2048Reached(l:game.board)
 		call s:drawBoard(l:game.board)
@@ -132,16 +132,38 @@ function! s:addNumberToBoard(game)
 	endfor
 endfunction
 
-function! s:drawBoardStructure()
-	call setline(1, "╔══════╦══════╦══════╦══════╗")
-	call setline(2, "║      ║      ║      ║      ║")
-	call setline(3, "╠══════╬══════╬══════╬══════╣")
-	call setline(4, "║      ║      ║      ║      ║")
-	call setline(5, "╠══════╬══════╬══════╬══════╣")
-	call setline(6, "║      ║      ║      ║      ║")
-	call setline(7, "╠══════╬══════╬══════╬══════╣")
-	call setline(8, "║      ║      ║      ║      ║")
-	call setline(9, "╚══════╩══════╩══════╩══════╝")
+function! s:drawBoardStructure(rows, cols)
+	call s:drawLine(
+		\ #{id: 1, cols: a:cols, start: "╔", mid: "╦", end: "╗"}
+		\ )
+
+	for l:i in range(2, a:rows * 2)
+		if l:i % 2 == 0
+			call setline(l:i, "")
+		else
+			call s:drawLine(
+				\ #{id: l:i, cols: a:cols,
+				\   start: "╠", mid: "╬", end: "╣"}
+				\ )
+		endif
+	endfor
+
+	call s:drawLine(
+		\ #{id: a:rows * 2 + 1, cols: a:cols,
+		\   start: "╚", mid: "╩", end: "╝"}
+		\ )
+endfunction
+
+function! s:drawLine(line)
+	let l:aux = a:line.start
+
+	for l:i in range(a:line.cols - 1)
+		let l:aux .= "══════" . a:line.mid
+	endfor
+
+	let l:aux .= "══════" . a:line.end
+
+	call setline(a:line.id, l:aux)
 endfunction
 
 function! s:drawBoard(board)
