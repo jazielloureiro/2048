@@ -88,7 +88,6 @@ endfunction
 
 function! s:createGameDict()
 	let l:game = {
-		\ "board": s:createBoard(),
 		\ "rows": 4,
 		\ "cols": 4,
 		\ "available_squares": 14,
@@ -96,25 +95,25 @@ function! s:createGameDict()
 		\ "input": ""
 		\}
 
+	let l:game.board = s:createBoard(l:game.rows, l:game.cols)
+
+	call s:addNumberToBoard(l:game.board, 16)
+	call s:addNumberToBoard(l:game.board, 15)
+
 	return l:game
 endfunction
 
-function! s:createBoard()
-	const l:boardSize = 3
-
+function! s:createBoard(rows, cols)
 	let l:cols = []
-	for l:i in range(0, l:boardSize)
+	for l:i in range(a:cols)
 		let l:cols += [0]
 	endfor
 
 	let l:board = []
-	for l:i in range(0, l:boardSize)
+	for l:i in range(a:rows)
 		let l:board += [[]]
 		let l:board[l:i] = copy(l:cols)
 	endfor
-
-	call s:addNumberToBoard(l:board, 16)
-	call s:addNumberToBoard(l:board, 15)
 
 	return l:board
 endfunction
