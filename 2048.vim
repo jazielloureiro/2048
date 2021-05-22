@@ -11,61 +11,21 @@ function! s:main()
 		let l:game.input = nr2char(getchar())
 
 		if l:game.input == "h"
-			call s:mergeNumbers(l:game, {
-				\ "range_rows": range(l:game.rows),
-				\ "range_cols": range(l:game.cols - 1),
-				\ "increment": 1,
-				\ "limit": l:game.cols - 1
-				\ })
+			call s:mergeNumbers(l:game, l:game.merge["h"])
 
-			call s:move(l:game, {
-				\ "range_rows": range(l:game.rows),
-				\ "range_cols": range(1, l:game.cols - 1),
-				\ "increment": -1,
-				\ "limit": 1
-				\ })
+			call s:move(l:game, l:game.move["h"])
 		elseif l:game.input == "j"
-			call s:mergeNumbers(l:game, {
-				\ "range_rows": range(l:game.rows - 1, 1, -1),
-				\ "range_cols": range(l:game.cols),
-				\ "increment": -1,
-				\ "limit": 0
-				\ })
+			call s:mergeNumbers(l:game, l:game.merge["j"])
 
-			call s:move(l:game, {
-				\ "range_rows": range(l:game.rows - 2, 0, -1),
-				\ "range_cols": range(l:game.cols),
-				\ "increment": 1,
-				\ "limit": l:game.rows - 2
-				\ })
+			call s:move(l:game, l:game.move["j"])
 		elseif l:game.input == "k"
-			call s:mergeNumbers(l:game, {
-				\ "range_rows": range(l:game.rows - 1),
-				\ "range_cols": range(l:game.cols),
-				\ "increment": 1,
-				\ "limit": l:game.rows - 1
-				\ })
+			call s:mergeNumbers(l:game, l:game.merge["k"])
 
-			call s:move(l:game, {
-				\ "range_rows": range(1, l:game.rows - 1),
-				\ "range_cols": range(l:game.cols),
-				\ "increment": -1,
-				\ "limit": 1
-				\ })
+			call s:move(l:game, l:game.move["k"])
 		elseif l:game.input == "l"
-			call s:mergeNumbers(l:game, {
-				\ "range_rows": range(l:game.rows),
-				\ "range_cols": range(l:game.cols - 1, 1, -1),
-				\ "increment": -1,
-				\ "limit": 0
-				\ })
+			call s:mergeNumbers(l:game, l:game.merge["l"])
 
-			call s:move(l:game, {
-				\ "range_rows": range(l:game.rows),
-				\ "range_cols": range(l:game.cols - 2, 0, -1),
-				\ "increment": 1,
-				\ "limit": l:game.cols - 2
-				\ })
+			call s:move(l:game, l:game.move["l"])
 		endif
 
 		if l:game.is_move
@@ -86,7 +46,7 @@ function! s:createBuffer()
 endfunction
 
 function! s:createGameDict()
-	let l:game = #{rows: 3, cols: 3, is_move: 0, input: ""}
+	let l:game = #{rows: 4, cols: 4, is_move: 0, input: ""}
 
 	let l:game.board = s:createBoard(l:game.rows, l:game.cols)
 
@@ -94,6 +54,58 @@ function! s:createGameDict()
 
 	call s:addNumberToBoard(l:game)
 	call s:addNumberToBoard(l:game)
+
+	let l:game.merge = {}
+
+	let l:game.merge["h"] = {
+		\ "rows": range(l:game.rows),
+		\ "cols": range(l:game.cols - 1),
+		\ "inc": 1,
+		\ "limit": l:game.cols - 1}
+
+	let l:game.merge["j"] = {
+		\ "rows": range(l:game.rows - 1, 1, -1),
+		\ "cols": range(l:game.cols),
+		\ "inc": -1,
+		\ "limit": 0}
+
+	let l:game.merge["k"] = {
+		\ "rows": range(l:game.rows - 1),
+		\ "cols": range(l:game.cols),
+		\ "inc": 1,
+		\ "limit": l:game.rows - 1}
+
+	let l:game.merge["l"] = {
+		\ "rows": range(l:game.rows),
+		\ "cols": range(l:game.cols - 1, 1, -1),
+		\ "inc": -1,
+		\ "limit": 0}
+
+	let l:game.move = {}
+
+	let l:game.move["h"] = {
+		\ "rows": range(l:game.rows),
+		\ "cols": range(1, l:game.cols - 1),
+		\ "inc": -1,
+		\ "limit": 1}
+
+	let l:game.move["j"] = {
+		\ "rows": range(l:game.rows - 2, 0, -1),
+		\ "cols": range(l:game.cols),
+		\ "inc": 1,
+		\ "limit": l:game.rows - 2}
+
+	let l:game.move["k"] = {
+		\ "rows": range(1, l:game.rows - 1),
+		\ "cols": range(l:game.cols),
+		\ "inc": -1,
+		\ "limit": 1}
+
+	let l:game.move["l"] = {
+		\ "rows": range(l:game.rows),
+		\ "cols": range(l:game.cols - 2, 0, -1),
+		\ "inc": 1,
+		\ "limit": l:game.cols - 2}
 
 	return l:game
 endfunction
@@ -199,11 +211,11 @@ function! s:is2048Reached(board)
 	return 0
 endfunction
 
-function! s:mergeNumbers(game, op)
-	for l:i in a:op.range_rows
-		for l:j in a:op.range_cols
+function! s:mergeNumbers(game, rg)
+	for l:i in a:rg.rows
+		for l:j in a:rg.cols
 			if a:game.board[l:i][l:j] != 0 && a:game.input =~ 'h\|l'
-				for l:k in range(l:j + a:op.increment, a:op.limit, a:op.increment)
+				for l:k in range(l:j + a:rg.inc, a:rg.limit, a:rg.inc)
 					if a:game.board[l:i][l:j] == a:game.board[l:i][l:k]
 						let a:game.board[l:i][l:j] *= 2
 						let a:game.board[l:i][l:k] = 0
@@ -215,7 +227,7 @@ function! s:mergeNumbers(game, op)
 					endif
 				endfor
 			elseif a:game.board[l:i][l:j] != 0
-				for l:k in range(l:i + a:op.increment, a:op.limit, a:op.increment)
+				for l:k in range(l:i + a:rg.inc, a:rg.limit, a:rg.inc)
 					if a:game.board[l:i][l:j] == a:game.board[l:k][l:j]
 						let a:game.board[l:i][l:j] *= 2
 						let a:game.board[l:k][l:j] = 0
@@ -231,26 +243,26 @@ function! s:mergeNumbers(game, op)
 	endfor
 endfunction
 
-function! s:move(game, op)
-	for l:i in a:op.range_rows
-		for l:j in a:op.range_cols
+function! s:move(game, rg)
+	for l:i in a:rg.rows
+		for l:j in a:rg.cols
 			if a:game.board[l:i][l:j] != 0 && a:game.input =~ 'h\|l'
-				for l:k in range(l:j, a:op.limit, a:op.increment)
-					if a:game.board[l:i][l:k + a:op.increment] == 0
+				for l:k in range(l:j, a:rg.limit, a:rg.inc)
+					if a:game.board[l:i][l:k + a:rg.inc] == 0
 						let l:aux = a:game.board[l:i][l:k]
-						let a:game.board[l:i][l:k] = a:game.board[l:i][l:k + a:op.increment]
-						let a:game.board[l:i][l:k + a:op.increment] = l:aux
+						let a:game.board[l:i][l:k] = a:game.board[l:i][l:k + a:rg.inc]
+						let a:game.board[l:i][l:k + a:rg.inc] = l:aux
 						let a:game.is_move = 1
 					else
 						break
 					endif
 				endfor
 			elseif a:game.board[l:i][l:j] != 0
-				for l:k in range(l:i, a:op.limit, a:op.increment)
-					if a:game.board[l:k + a:op.increment][l:j] == 0
+				for l:k in range(l:i, a:rg.limit, a:rg.inc)
+					if a:game.board[l:k + a:rg.inc][l:j] == 0
 						let l:aux = a:game.board[l:k][l:j]
-						let a:game.board[l:k][l:j] = a:game.board[l:k + a:op.increment][l:j]
-						let a:game.board[l:k + a:op.increment][l:j] = l:aux
+						let a:game.board[l:k][l:j] = a:game.board[l:k + a:rg.inc][l:j]
+						let a:game.board[l:k + a:rg.inc][l:j] = l:aux
 						let a:game.is_move = 1
 					else
 						break
