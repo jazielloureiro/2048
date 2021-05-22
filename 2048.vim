@@ -10,22 +10,10 @@ function! s:main()
 
 		let l:game.input = nr2char(getchar())
 
-		if l:game.input == "h"
-			call s:mergeNumbers(l:game, l:game.merge["h"])
+		if l:game.input =~ 'h\|j\|k\|l'
+			call s:mergeNumbers(l:game, l:game.merge[l:game.input])
 
-			call s:move(l:game, l:game.move["h"])
-		elseif l:game.input == "j"
-			call s:mergeNumbers(l:game, l:game.merge["j"])
-
-			call s:move(l:game, l:game.move["j"])
-		elseif l:game.input == "k"
-			call s:mergeNumbers(l:game, l:game.merge["k"])
-
-			call s:move(l:game, l:game.move["k"])
-		elseif l:game.input == "l"
-			call s:mergeNumbers(l:game, l:game.merge["l"])
-
-			call s:move(l:game, l:game.move["l"])
+			call s:move(l:game, l:game.move[l:game.input])
 		endif
 
 		if l:game.is_move
