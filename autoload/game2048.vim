@@ -1,4 +1,4 @@
-function! s:main()
+function! game2048#main()
 	call s:createBuffer()
 
 	let l:game = s:createGameDict()
@@ -260,5 +260,3 @@ function! s:move(game, rg)
 		endfor
 	endfor
 endfunction
-
-call s:main()
