@@ -1,7 +1,7 @@
-function! game2048#main()
+function! game2048#main(...)
 	call s:createBuffer()
 
-	let l:game = s:createGameDict()
+	let l:game = s:createGameDict(a:000)
 
 	call s:drawBoardStructure(l:game.rows, l:game.cols)
 
@@ -33,8 +33,10 @@ function! s:createBuffer()
 	edit! 2048
 endfunction
 
-function! s:createGameDict()
+function! s:createGameDict(args)
 	let l:game = #{rows: 4, cols: 4, is_move: 0, input: ""}
+
+	call s:matchArgs(l:game, a:args)
 
 	let l:game.board = s:createBoard(l:game.rows, l:game.cols)
 
@@ -96,6 +98,22 @@ function! s:createGameDict()
 		\ "limit": l:game.cols - 2}
 
 	return l:game
+endfunction
+
+function! s:matchArgs(game, args)
+	for l:i in a:args
+		if l:i =~ '^rows=\d\+$' || l:i =~ '^cols=\d\+$'
+			let l:num = str2nr(l:i[5:])
+
+			if l:num >= 2 && l:num <= 20
+				if l:i =~ '^rows=\d\+$'
+					let a:game.rows = l:num
+				else
+					let a:game.cols = l:num
+				endif
+			endif
+		endif
+	endfor
 endfunction
 
 function! s:createBoard(rows, cols)
