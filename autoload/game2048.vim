@@ -5,7 +5,7 @@ function! game2048#main(...)
 
 	call s:drawBoardStructure(l:game.rows, l:game.cols)
 
-	while l:game.input != "q" && l:game.available_squares > 0 && !s:is2048Reached(l:game.board)
+	while l:game.input != "q" && !s:is2048Reached(l:game.board)
 		call s:drawBoard(l:game.board)
 
 		let l:game.input = nr2char(getchar())
@@ -19,6 +19,10 @@ function! game2048#main(...)
 		if l:game.is_move
 			call s:addNumberToBoard(l:game)
 			let l:game.is_move = 0
+		endif
+
+		if s:isGameOver(l:game)
+			break
 		endif
 	endwhile
 
@@ -277,4 +281,32 @@ function! s:move(game, rg)
 			endif
 		endfor
 	endfor
+endfunction
+
+function! s:isGameOver(game)
+	if a:game.available_squares > 0
+		return 0
+	endif
+
+	for l:i in range(a:game.rows - 1)
+		for l:j in range(a:game.cols - 1)
+			if a:game.board[l:i][l:j] == a:game.board[l:i + 1][l:j]
+				return 0
+			elseif a:game.board[l:i][l:j] == a:game.board[l:i][l:j + 1]
+				return 0
+			endif
+		endfor
+
+		if a:game.board[l:i][a:game.cols - 1] == a:game.board[l:i + 1][a:game.cols - 1]
+			return 0
+		endif
+	endfor
+
+	for l:j in range(a:game.cols - 1)
+		if a:game.board[a:game.rows - 1][l:j] == a:game.board[a:game.rows - 1][l:j + 1]
+			return 0
+		endif
+	endfor
+
+	return 1
 endfunction
