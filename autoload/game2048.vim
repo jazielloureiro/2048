@@ -5,7 +5,7 @@ function! game2048#main(...)
 
 	call s:drawBoardStructure(l:game.rows, l:game.cols)
 
-	while l:game.input != "q" && !s:is2048Reached(l:game.board)
+	while l:game.input != "q"
 		call s:drawBoard(l:game.board)
 
 		let l:game.input = nr2char(getchar())
@@ -23,6 +23,8 @@ function! game2048#main(...)
 
 		if s:isGameOver(l:game)
 			break
+		elseif l:game.biggest >= l:game.limit
+			break
 		endif
 	endwhile
 
@@ -38,7 +40,8 @@ function! s:createBuffer()
 endfunction
 
 function! s:createGameDict(args)
-	let l:game = #{rows: 4, cols: 4, is_move: 0, input: ""}
+	let l:game = #{rows: 4, cols: 4, limit: 2048,
+		\ biggest: 4, is_move: 0, input: ""}
 
 	call s:matchArgs(l:game, a:args)
 
@@ -115,6 +118,12 @@ function! s:matchArgs(game, args)
 				else
 					let a:game.cols = l:num
 				endif
+			endif
+		elseif l:i =~ '^limit=\d\+$'
+			let l:num = str2nr(l:i[6:])
+
+			if l:num > 4
+				let a:game.limit = l:num
 			endif
 		endif
 	endfor
@@ -209,18 +218,6 @@ function! s:drawBoard(board)
 	redraw
 endfunction
 
-function! s:is2048Reached(board)
-	for l:i in a:board
-		for l:j in l:i
-			if l:j == 2048
-				return 1
-			endif
-		endfor
-	endfor
-
-	return 0
-endfunction
-
 function! s:mergeNumbers(game, rg)
 	for l:i in a:rg.rows
 		for l:j in a:rg.cols
@@ -229,6 +226,11 @@ function! s:mergeNumbers(game, rg)
 					if a:game.board[l:i][l:j] == a:game.board[l:i][l:k]
 						let a:game.board[l:i][l:j] *= 2
 						let a:game.board[l:i][l:k] = 0
+
+						if a:game.board[l:i][l:j] > a:game.biggest
+							let a:game.biggest = a:game.board[l:i][l:j] 
+						endif
+
 						let a:game.available_squares += 1
 						let a:game.is_move = 1
 						break
@@ -241,6 +243,11 @@ function! s:mergeNumbers(game, rg)
 					if a:game.board[l:i][l:j] == a:game.board[l:k][l:j]
 						let a:game.board[l:i][l:j] *= 2
 						let a:game.board[l:k][l:j] = 0
+
+						if a:game.board[l:i][l:j] > a:game.biggest
+							let a:game.biggest = a:game.board[l:i][l:j] 
+						endif
+
 						let a:game.available_squares += 1
 						let a:game.is_move = 1
 						break
