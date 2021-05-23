@@ -201,13 +201,15 @@ function! s:drawBoard(board)
 	let l:line_id = 2
 
 	for l:i in a:board
-		let l:line = "║ "
+		let l:line = "║"
 
 		for l:j in l:i
-			if l:j != 0
-				let l:line .= printf("%4d", l:j) . " ║ "
+			if l:j > 9999
+				let l:line .= printf(" %.3s. ║", l:j)
+			elseif l:j != 0
+				let l:line .= printf(" %4d ║", l:j)
 			else
-				let l:line .= "     ║ "
+				let l:line .= "      ║"
 			endif
 		endfor
 
