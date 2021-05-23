@@ -37,6 +37,8 @@ function! s:createBuffer()
 	endif
 
 	edit! 2048
+
+	setlocal filetype=2048
 endfunction
 
 function! s:createGameDict(args)
