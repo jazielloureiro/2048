@@ -38,7 +38,9 @@ function! s:createBuffer()
 
 	edit! 2048
 
-	setlocal filetype=2048
+	setlocal filetype=2048 buftype=nofile noswapfile 
+		\ nocursorcolumn nocursorline nolist
+		\ nowrap nospell
 endfunction
 
 function! s:createGameDict(args)
