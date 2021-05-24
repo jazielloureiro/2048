@@ -2,17 +2,17 @@ if exists('b:current_syntax')
 	finish
 endif
 
-hi ColorNum ctermfg=4
-hi Color2 ctermfg=12
-hi Color4 ctermfg=13
-hi Color8 ctermfg=9
-hi Color16 ctermfg=11
-hi Color32 ctermfg=10
-hi Color64 ctermfg=6
-hi Color128 ctermfg=5
-hi Color256 ctermfg=1
-hi Color512 ctermfg=3
-hi Color1024 ctermfg=2
+hi ColorNum ctermfg=4 guifg=#0087ff
+hi Color2 ctermfg=12 guifg=#00ffff
+hi Color4 ctermfg=13 guifg=#af5fff
+hi Color8 ctermfg=9 guifg=#ff5f00
+hi Color16 ctermfg=11 guifg=#ffd700
+hi Color32 ctermfg=10 guifg=#afd700
+hi Color64 ctermfg=6 guifg=#008080
+hi Color128 ctermfg=5 guifg=#8700ff
+hi Color256 ctermfg=1 guifg=#ff0000
+hi Color512 ctermfg=3 guifg=#ffaf00
+hi Color1024 ctermfg=2 guifg=#008000
 
 syntax match ColorNum '\s\d\+\(.\|\)\s'
 syntax match Color2 '\s2\s'
