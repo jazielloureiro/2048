@@ -22,11 +22,19 @@ function! game2048#main(...)
 		endif
 
 		if s:isGameOver(l:game)
+			call append(line("$"), "Game over!")
 			break
 		elseif l:game.biggest >= l:game.limit
+			call append(line("$"), "You win!")
 			break
 		endif
 	endwhile
+
+	if l:game.input != "q"
+		call append(line("$"), "Press any key to exit.")
+		call s:drawBoard(l:game.board)
+		call getchar()
+	endif
 
 	bdelete!
 endfunction
