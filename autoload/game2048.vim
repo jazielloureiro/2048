@@ -14,6 +14,8 @@ function! game2048#main(...)
 			call s:mergeNumbers(l:game, l:game.merge[l:game.input])
 
 			call s:move(l:game, l:game.move[l:game.input])
+		elseif l:game.input == "r"
+			let l:game = s:createGameDict(a:000)
 		endif
 
 		if l:game.is_move
