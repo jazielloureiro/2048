@@ -1,47 +1,47 @@
 function! game2048#main(...)
-	call s:createBuffer()
+	call s:create_buffer()
 
-	let l:game = s:createGameDict(a:000)
+	let l:game = s:create_game_dict(a:000)
 
-	call s:drawBoardStructure(l:game.rows, l:game.cols)
+	call s:draw_board_structure(l:game.rows, l:game.cols)
 
-	while l:game.input != "q"
-		call s:drawBoard(l:game.board)
+	while l:game.input != 'q'
+		call s:draw_board(l:game.board)
 
 		let l:game.input = nr2char(getchar())
 
 		if l:game.input =~ 'h\|j\|k\|l'
-			call s:mergeNumbers(l:game, l:game.merge[l:game.input])
+			call s:merge_numbers(l:game, l:game.merge[l:game.input])
 
 			call s:move(l:game, l:game.move[l:game.input])
-		elseif l:game.input == "r"
-			let l:game = s:createGameDict(a:000)
+		elseif l:game.input == 'r'
+			let l:game = s:create_game_dict(a:000)
 		endif
 
 		if l:game.is_move
-			call s:addNumberToBoard(l:game)
+			call s:add_number_to_board(l:game)
 			let l:game.is_move = 0
 		endif
 
-		if s:isGameOver(l:game)
-			call append(line("$"), "Game over!")
+		if s:is_game_over(l:game)
+			call append(line('$'), 'Game over!')
 			break
 		elseif l:game.biggest >= l:game.limit
-			call append(line("$"), "You win!")
+			call append(line('$'), 'You win!')
 			break
 		endif
 	endwhile
 
-	if l:game.input != "q"
-		call append(line("$"), "Press any key to exit.")
-		call s:drawBoard(l:game.board)
+	if l:game.input != 'q'
+		call append(line('$'), 'Press any key to exit.')
+		call s:draw_board(l:game.board)
 		call getchar()
 	endif
 
 	bdelete!
 endfunction
 
-function! s:createBuffer()
+function! s:create_buffer()
 	if filewritable(expand('%'))
 		write
 	endif
@@ -53,75 +53,75 @@ function! s:createBuffer()
 		\ nowrap nospell
 endfunction
 
-function! s:createGameDict(args)
+function! s:create_game_dict(args)
 	let l:game = #{rows: 4, cols: 4, limit: 2048,
-		\ biggest: 4, is_move: 0, input: ""}
+		\ biggest: 4, is_move: 0, input: ''}
 
-	call s:matchArgs(l:game, a:args)
+	call s:match_args(l:game, a:args)
 
-	let l:game.board = s:createBoard(l:game.rows, l:game.cols)
+	let l:game.board = s:create_board(l:game.rows, l:game.cols)
 
 	let l:game.available_squares = l:game.rows * l:game.cols
 
-	call s:addNumberToBoard(l:game)
-	call s:addNumberToBoard(l:game)
+	call s:add_number_to_board(l:game)
+	call s:add_number_to_board(l:game)
 
 	let l:game.merge = {}
 
-	let l:game.merge["h"] = {
-		\ "rows": range(l:game.rows),
-		\ "cols": range(l:game.cols - 1),
-		\ "inc": 1,
-		\ "limit": l:game.cols - 1}
+	let l:game.merge['h'] = {
+		\ 'rows': range(l:game.rows),
+		\ 'cols': range(l:game.cols - 1),
+		\ 'inc': 1,
+		\ 'limit': l:game.cols - 1}
 
-	let l:game.merge["j"] = {
-		\ "rows": range(l:game.rows - 1, 1, -1),
-		\ "cols": range(l:game.cols),
-		\ "inc": -1,
-		\ "limit": 0}
+	let l:game.merge['j'] = {
+		\ 'rows': range(l:game.rows - 1, 1, -1),
+		\ 'cols': range(l:game.cols),
+		\ 'inc': -1,
+		\ 'limit': 0}
 
-	let l:game.merge["k"] = {
-		\ "rows": range(l:game.rows - 1),
-		\ "cols": range(l:game.cols),
-		\ "inc": 1,
-		\ "limit": l:game.rows - 1}
+	let l:game.merge['k'] = {
+		\ 'rows': range(l:game.rows - 1),
+		\ 'cols': range(l:game.cols),
+		\ 'inc': 1,
+		\ 'limit': l:game.rows - 1}
 
-	let l:game.merge["l"] = {
-		\ "rows": range(l:game.rows),
-		\ "cols": range(l:game.cols - 1, 1, -1),
-		\ "inc": -1,
-		\ "limit": 0}
+	let l:game.merge['l'] = {
+		\ 'rows': range(l:game.rows),
+		\ 'cols': range(l:game.cols - 1, 1, -1),
+		\ 'inc': -1,
+		\ 'limit': 0}
 
 	let l:game.move = {}
 
-	let l:game.move["h"] = {
-		\ "rows": range(l:game.rows),
-		\ "cols": range(1, l:game.cols - 1),
-		\ "inc": -1,
-		\ "limit": 1}
+	let l:game.move['h'] = {
+		\ 'rows': range(l:game.rows),
+		\ 'cols': range(1, l:game.cols - 1),
+		\ 'inc': -1,
+		\ 'limit': 1}
 
-	let l:game.move["j"] = {
-		\ "rows": range(l:game.rows - 2, 0, -1),
-		\ "cols": range(l:game.cols),
-		\ "inc": 1,
-		\ "limit": l:game.rows - 2}
+	let l:game.move['j'] = {
+		\ 'rows': range(l:game.rows - 2, 0, -1),
+		\ 'cols': range(l:game.cols),
+		\ 'inc': 1,
+		\ 'limit': l:game.rows - 2}
 
-	let l:game.move["k"] = {
-		\ "rows": range(1, l:game.rows - 1),
-		\ "cols": range(l:game.cols),
-		\ "inc": -1,
-		\ "limit": 1}
+	let l:game.move['k'] = {
+		\ 'rows': range(1, l:game.rows - 1),
+		\ 'cols': range(l:game.cols),
+		\ 'inc': -1,
+		\ 'limit': 1}
 
-	let l:game.move["l"] = {
-		\ "rows": range(l:game.rows),
-		\ "cols": range(l:game.cols - 2, 0, -1),
-		\ "inc": 1,
-		\ "limit": l:game.cols - 2}
+	let l:game.move['l'] = {
+		\ 'rows': range(l:game.rows),
+		\ 'cols': range(l:game.cols - 2, 0, -1),
+		\ 'inc': 1,
+		\ 'limit': l:game.cols - 2}
 
 	return l:game
 endfunction
 
-function! s:matchArgs(game, args)
+function! s:match_args(game, args)
 	for l:i in a:args
 		if l:i =~ '^rows=\d\+$' || l:i =~ '^cols=\d\+$'
 			let l:num = str2nr(l:i[5:])
@@ -143,7 +143,7 @@ function! s:matchArgs(game, args)
 	endfor
 endfunction
 
-function! s:createBoard(rows, cols)
+function! s:create_board(rows, cols)
 	let l:cols = []
 	for l:i in range(a:cols)
 		let l:cols += [0]
@@ -158,7 +158,7 @@ function! s:createBoard(rows, cols)
 	return l:board
 endfunction
 
-function! s:addNumberToBoard(game)
+function! s:add_number_to_board(game)
 	let l:position = rand() % a:game.available_squares + 1
 	let l:pos_count = 0
 
@@ -177,53 +177,53 @@ function! s:addNumberToBoard(game)
 	endfor
 endfunction
 
-function! s:drawBoardStructure(rows, cols)
-	call s:drawLine(
-		\ #{id: 1, cols: a:cols, start: "╔", mid: "╦", end: "╗"}
+function! s:draw_board_structure(rows, cols)
+	call s:draw_line(
+		\ #{id: 1, cols: a:cols, start: '╔', mid: '╦', end: '╗'}
 		\ )
 
 	for l:i in range(2, a:rows * 2)
 		if l:i % 2 == 0
-			call setline(l:i, "")
+			call setline(l:i, '')
 		else
-			call s:drawLine(
+			call s:draw_line(
 				\ #{id: l:i, cols: a:cols,
-				\   start: "╠", mid: "╬", end: "╣"}
+				\   start: '╠', mid: '╬', end: '╣'}
 				\ )
 		endif
 	endfor
 
-	call s:drawLine(
+	call s:draw_line(
 		\ #{id: a:rows * 2 + 1, cols: a:cols,
-		\   start: "╚", mid: "╩", end: "╝"}
+		\   start: '╚', mid: '╩', end: '╝'}
 		\ )
 endfunction
 
-function! s:drawLine(line)
+function! s:draw_line(line)
 	let l:aux = a:line.start
 
 	for l:i in range(a:line.cols - 1)
-		let l:aux .= "══════" . a:line.mid
+		let l:aux .= '══════' . a:line.mid
 	endfor
 
-	let l:aux .= "══════" . a:line.end
+	let l:aux .= '══════' . a:line.end
 
 	call setline(a:line.id, l:aux)
 endfunction
 
-function! s:drawBoard(board)
+function! s:draw_board(board)
 	let l:line_id = 2
 
 	for l:i in a:board
-		let l:line = "║"
+		let l:line = '║'
 
 		for l:j in l:i
 			if l:j > 9999
-				let l:line .= printf(" %.3s. ║", l:j)
+				let l:line .= printf(' %.3s. ║', l:j)
 			elseif l:j != 0
-				let l:line .= printf(" %4d ║", l:j)
+				let l:line .= printf(' %4d ║', l:j)
 			else
-				let l:line .= "      ║"
+				let l:line .= '      ║'
 			endif
 		endfor
 
@@ -234,7 +234,7 @@ function! s:drawBoard(board)
 	redraw
 endfunction
 
-function! s:mergeNumbers(game, rg)
+function! s:merge_numbers(game, rg)
 	for l:i in a:rg.rows
 		for l:j in a:rg.cols
 			if a:game.board[l:i][l:j] != 0 && a:game.input =~ 'h\|l'
@@ -306,7 +306,7 @@ function! s:move(game, rg)
 	endfor
 endfunction
 
-function! s:isGameOver(game)
+function! s:is_game_over(game)
 	if a:game.available_squares > 0
 		return 0
 	endif
