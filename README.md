@@ -27,6 +27,38 @@ Plug 'jazielloureiro/2048'
 :PlugInstall
 ```
 
+## Usage
+
+Launch the game with the command:
+
+```vim
+:Start2048
+```
+
+- Press **h**, **j**, **k**, **l** to move.
+
+- Press **r** to restart the game.
+
+- Press **q** to quit.
+
+### Options
+
+`:Start2048` can be called with these arguments.
+
+- `rows=`: It must be followed by a number from 2 to 20.
+
+- `cols=`: It must be followed by a number from 2 to 20.
+
+- `limit=`: It must be followed by a number greater than 4.
+
+For example, the command:
+
+```vim
+:Start2048 rows=10 cols=8 limit=4096
+```
+
+create a 10 x 8 board, which the biggest number can be 4096.
+
 ## License
 
 [MIT](https://github.com/jazielloureiro/2048/blob/master/LICENSE)
