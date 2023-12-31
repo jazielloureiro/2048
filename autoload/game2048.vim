@@ -8,7 +8,7 @@ function! game2048#main(...)
 	while l:game.input != 'q'
 		call s:draw_board(l:game.board)
 
-		let l:game.input = nr2char(getchar())
+		let l:game.input = nr2char(getchar(0))
 
 		if l:game.input =~ 'h\|j\|k\|l'
 			call s:merge_numbers(l:game, l:game.merge[l:game.input])
