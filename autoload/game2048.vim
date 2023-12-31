@@ -50,7 +50,7 @@ function! s:create_buffer()
 
 	setlocal filetype=2048 buftype=nofile noswapfile 
 		\ nocursorcolumn nocursorline nolist
-		\ nowrap nospell
+		\ nowrap nospell t_Co=16
 endfunction
 
 function! s:create_game_dict(args)
