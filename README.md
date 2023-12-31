@@ -27,6 +27,14 @@ Plug 'jazielloureiro/2048'
 :PlugInstall
 ```
 
+### [Docker](https://hub.docker.com/r/jazielloureiro/2048)
+
+- Additionally, this game can also be played in a Docker container:
+
+```sh
+docker run -it jazielloureiro/2048
+```
+
 ## Usage
 
 Launch the game with the command:
@@ -51,13 +59,11 @@ Launch the game with the command:
 
 - `limit=`: It must be followed by a number greater than 4.
 
-For example, the command:
+For example, the command below creates a 10 x 8 board, where the largest number can be 4096:
 
 ```vim
 :Start2048 rows=10 cols=8 limit=4096
 ```
-
-create a 10 x 8 board, which the biggest number can be 4096.
 
 ## License
 
