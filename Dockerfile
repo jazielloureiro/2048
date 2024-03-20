@@ -6,4 +6,4 @@ WORKDIR /root/.vim
 
 COPY . .
 
-CMD [ "vim", "-c", "exe 'Start2048' | q!" ]
+CMD vim -c "exe 'Start2048 rows=${ROWS:-4} cols=${COLS:-4} limit=${LIMIT:-2048}' | q!"
