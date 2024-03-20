@@ -1,5 +1,2 @@
-.dockerignore
-Dockerfile
-.git*
-LICENSE
-README.md
+*
+!**/*.vim
