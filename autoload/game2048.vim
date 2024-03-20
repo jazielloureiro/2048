@@ -18,17 +18,20 @@ function! game2048#main(...)
 			let l:game = s:create_game_dict(a:000)
 		endif
 
-		if l:game.is_move
-			call s:add_number_to_board(l:game)
-			let l:game.is_move = 0
-		endif
-
-		if s:is_game_over(l:game)
-			call append(line('$'), 'Game over!')
-			break
-		elseif l:game.biggest >= l:game.limit
+		if l:game.biggest >= l:game.limit
 			call append(line('$'), 'You win!')
 			break
+		endif
+
+		if l:game.is_move
+			call s:add_number_to_board(l:game)
+
+			if s:is_game_over(l:game)
+				call append(line('$'), 'Game over!')
+				break
+			endif
+
+			let l:game.is_move = 0
 		endif
 	endwhile
 
