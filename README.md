@@ -65,6 +65,12 @@ For example, the command below creates a 10 x 8 board, where the largest number 
 :Start2048 rows=10 cols=8 limit=4096
 ```
 
+You can also supply these arguments to the Docker image by using environment variables:
+
+```sh
+docker run -it -e ROWS=10 -e COLS=8 -e LIMIT=4096 jazielloureiro/2048
+```
+
 ## License
 
 [MIT](https://github.com/jazielloureiro/2048/blob/master/LICENSE)
